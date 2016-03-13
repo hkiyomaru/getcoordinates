@@ -14,6 +14,8 @@ Download [this dataset](http://www.nature.com/nature/journal/v508/n7495/extref/n
 
 and save it __as a csv file__ in the datasets directory.
 
+Then, please __delete the "Name column" and left justify__.
+
 ##Run
 
 ```
