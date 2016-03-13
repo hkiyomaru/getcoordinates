@@ -10,10 +10,13 @@ def get_coordinates(query_list):
     inspector = InspectCoordinates()
     for p in partitions:
         try:
-            coordinate = inspector.inspect_coordinate(p)
-            coordinates.append(coordinate)
+            coordinate = inspector.inspect_coordinate(p[0])
+            p.append(coordinate[0])
+            p.append(coordinate[1])
+            p.append(coordinate[2])
+            coordinates.append(p)
         except:
-            print "Cannot get the coordinate of " + p
+            print "Cannot get the coordinate of " + p[0]
     return coordinates
 
 def write_csv(coordinates, write_path):
@@ -35,4 +38,5 @@ if __name__ == '__main__':
     partitions = dataset_parser.parse_partition()
     
     coordinates = get_coordinates(partitions)
+    # name, major_region, voxel_count, x, y, z
     write_csv(coordinates, write_path)

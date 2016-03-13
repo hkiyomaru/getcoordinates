@@ -8,7 +8,11 @@ class ParsePartition(GetRecords):
     def parse_partition(self):
         partitions = []
         for r in self.records:
-            partitions.append(r[2])
+            node = []
+            node.append(r[2])
+            node.append(r[3])
+            node.append(r[4])
+            partitions.append(node)
         return partitions
 
 if __name__ == "__main__":

@@ -13,7 +13,7 @@ class InspectCoordinates():
                 coordinate[i] += exp['injection-coordinates'][i]
         for i in range(len(coordinate)):
             coordinate[i] /= len(exps)
-        coordinate.insert(0, query)
+        # coordinate.insert(0, query)
         return coordinate
 
 # test code
