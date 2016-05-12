@@ -7,12 +7,14 @@ class GetRecords:
         self.path = str(path)
 
     def get_records(self):
-        cmd = "cat " + self.path + " | grep " + self.query
+        cmd = "cat " + self.path
+        if self.query:
+            cmd += " | grep " + self.query
         output = commands.getoutput(cmd).split("\n")
         for i in range(len(output)):
             output[i] = output[i].split(',')
         return output
 
 if __name__ == "__main__":
-    records = GetRecords("Isocortex", "datasets/nature13186-s2.csv")
+    records = GetRecords("", "datasets/nature13186-s2.csv")
     print records.get_records()
