@@ -21,15 +21,18 @@ def write_csv(coordinates, write_path):
     for c in coordinates:
         appendList = list(c)
         writer.writerow(appendList)
-    print "Writing CSV is a success."
+    print "Writing csv-file has been completed."
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
-    argparser.add_argument('-query', action='store',dest='query',default='Isocortex')
+    argparser.add_argument('-query', action='store',dest='query',default='')
     argparser.add_argument('-path', action='store', dest='path', default="datasets/nature13186-s2.csv")
     query = argparser.parse_args().query
     dataset_path = argparser.parse_args().path
-    write_path = write_dir + query + ".csv"
+    if query:
+        write_path = write_dir + query + ".csv"
+    else:
+        write_path = write_dir + "coordinates.csv"
 
     dataset_parser = ParsePartition(query, dataset_path) 
     partitions = dataset_parser.parse_partition()
