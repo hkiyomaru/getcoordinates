@@ -1,41 +1,48 @@
-from parse_partition import ParsePartition
+from parse_naturedata import ParseNatureData
 from inspect_coordinates import InspectCoordinates
 import argparse
 import csv
 
+argparser = argparse.ArgumentParser()
+argparser.add_argument('--dataset', action='store', dest='path',
+                       default="datasets/nature13186-s2.csv")
+args = argparser.parse_args()
+
 write_dir = "coordinates/"
 
-def get_coordinates(query_list):
+
+def get_coordinates(inspector, acronym):
+    """Get coordinates of given acronym."""
     coordinates = []
-    inspector = InspectCoordinates()
-    for p in partitions:
-        try:
-            coordinate = inspector.inspect_coordinate(p)
-            coordinates.append(coordinate)
-        except:
-            print "Cannot get the coordinate of " + p
+    for query in acronym:
+        result = inspector.inspect_coordinates(query)
+        if result:
+            coordinates.append(result)
+        else:
+            print "Cannot get coordinates of " + query
+
     return coordinates
 
+
 def write_csv(coordinates, write_path):
-    writer = csv.writer(open(write_path, "ab"))
+    """Dump a csv file."""
+    writer = csv.writer(open(write_path, "wb"))
+
     for c in coordinates:
         appendList = list(c)
         writer.writerow(appendList)
+
     print "Writing csv-file has been completed."
 
-if __name__ == '__main__':
-    argparser = argparse.ArgumentParser()
-    argparser.add_argument('-query', action='store',dest='query',default='')
-    argparser.add_argument('-path', action='store', dest='path', default="datasets/nature13186-s2.csv")
-    query = argparser.parse_args().query
-    dataset_path = argparser.parse_args().path
-    if query:
-        write_path = write_dir + query + ".csv"
-    else:
-        write_path = write_dir + "coordinates.csv"
 
-    dataset_parser = ParsePartition(query, dataset_path) 
-    partitions = dataset_parser.parse_partition()
-    
-    coordinates = get_coordinates(partitions)
+if __name__ == '__main__':
+    dataset_path = args.path
+    write_path = write_dir + "coordinates.csv"
+
+    dataset_parser = ParseNatureData(dataset_path)
+    acronym = dataset_parser.get_acronym()
+
+    inspector = InspectCoordinates()
+    coordinates = get_coordinates(inspector, acronym)
+
     write_csv(coordinates, write_path)
