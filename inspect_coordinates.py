@@ -1,25 +1,39 @@
 from allensdk.api.queries.mouse_connectivity_api import MouseConnectivityApi
 
-class InspectCoordinates():
-    def __init__(self):
-        mca = MouseConnectivityApi()
-        self.experiments = mca.experiment_source_search(injection_structures='root', transgenic_lines=0)
 
-    def inspect_coordinate(self, query):
-        coordinate = [0, 0, 0]
+class InspectCoordinates():
+    """Get coordinates of acronym."""
+
+    def __init__(self):
+        """Construct a InspectCoordinates."""
+        mca = MouseConnectivityApi()
+        self.experiments = mca.experiment_source_search(
+            injection_structures='root', transgenic_lines=0)
+
+    def inspect_coordinates(self, query):
+        """Inspect coordinates of query."""
+        coordinates = [0, 0, 0]
+
+        # get experiment data which relates to query
         exps = [exp for exp in self.experiments if exp['structure-abbrev'] == query]
+        if len(exps) == 0:
+            return False
+
+        # take average over injection coordinates of the experiments
         for exp in exps:
-            for i in range(len(coordinate)):
-                coordinate[i] += exp['injection-coordinates'][i]
-        for i in range(len(coordinate)):
-            coordinate[i] /= len(exps)
-        coordinate.insert(0, query)
-        return coordinate
+            injection_coordinates = exp['injection-coordinates']
+            for i, j in enumerate(injection_coordinates):
+                coordinates[i] += j / len(exps)
+
+        # insert query
+        coordinates.insert(0, query)
+        return coordinates
+
 
 # test code
 if __name__ == '__main__':
     query = u'ECT'
-    ic = InspectCoordinates()
-    coordinate = ic.inspect_coordinate(query)
-    print coordinate
+    inspector = InspectCoordinates()
+    coordinate = inspector.inspect_coordinates(query)
 
+    print coordinate
